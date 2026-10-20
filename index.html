@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ProfitPilot Business Calculator</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:15px Arial;background:#f3f5f9;color:#182230}
+header,footer{background:#101828;color:white;padding:22px 5%}
+header span{color:#e7b85c}.wrap{max-width:850px;width:92%;margin:20px auto}
+nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+nav a{color:white;text-decoration:none;margin-left:8px}
+.card{background:white;padding:16px;border-radius:11px;margin-bottom:15px;border:1px solid #e1e6ee}
+h2{font-size:20px;margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+label{display:block;font-size:13px;font-weight:bold;margin:8px 0 4px}
+input,select{width:100%;padding:10px;border:1px solid #ccd3df;border-radius:7px;font-size:15px;background:white}
+button{padding:10px 13px;border:0;border-radius:7px;margin:10px 5px 0 0;cursor:pointer;font-weight:bold}
+.dark{background:#101828;color:white}.gold{background:#e7b85c}.light{background:#edf0f5}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.metric{border:1px solid #e1e6ee;padding:10px;border-radius:8px;min-width:0}
+.metric small{color:#667085;font-size:12px}.value{font-size:clamp(15px,3vw,21px);font-weight:bold;overflow-wrap:anywhere;margin-top:5px}
+.feature{background:#101828;color:#e7b85c}.result{background:#f3f5f9;padding:10px;margin-top:10px;border-radius:7px}
+.result strong{display:block;font-size:19px;overflow-wrap:anywhere}
+.status{padding:10px;background:#e8f7ee;border-radius:7px;margin:12px 0}.loss{background:#fff0f0;color:#a12a38}
+.bar{height:9px;background:#eee;border-radius:9px;margin:5px 0 12px}.fill{height:100%;background:#12805c;width:0}.exp{background:#e7b85c}
+footer{text-align:center;font-size:13px}
+@media(max-width:500px){.grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media print{header,footer,button,nav{display:none}.wrap{margin:auto}}
+</style>
+</head>
+<body>
+<header>
+<nav><b style="font-size:22px">Profit<span>Pilot</span></b>
+<div><a href="#calc">Calculator</a><a href="#price">Pricing</a><a href="#break">Break-even</a></div></nav>
+<h1>Know Your Numbers. <span>Grow Your Profit.</span></h1>
+<p>Calculate business profits, expenses and selling prices in one place.</p>
+</header>
+
+<main class="wrap">
+<section class="card" id="calc">
+<h2>Business Profit Calculator</h2>
+<div class="grid">
+<div><label for="cur">Currency</label><select id="cur">
+<option value="USD">USD — United States</option>
+<option value="CNY">CNY — China</option>
+<option value="EUR">EUR — Germany, France, Italy</option>
+<option value="JPY">JPY — Japan</option>
+<option value="GBP">GBP — United Kingdom</option>
+<option value="INR">INR — India</option>
+<option value="RUB">RUB — Russia</option>
+<option value="CAD">CAD — Canada</option>
+<option value="BRL">BRL — Brazil</option>
+<option value="AUD">AUD — Australia</option>
+<option value="KRW">KRW — South Korea</option>
+<option value="MXN">MXN — Mexico</option>
+<option value="IDR">IDR — Indonesia</option>
+<option value="TRY">TRY — Türkiye</option>
+<option value="SAR">SAR — Saudi Arabia</option>
+<option value="AED">AED — United Arab Emirates</option>
+<option value="SGD">SGD — Singapore</option>
+<option value="CHF">CHF — Switzerland</option>
+<option value="ZAR">ZAR — South Africa</option>
+<option value="KES">KES — Kenya</option>
+</select></div>
+<div><label for="sales">Sales Revenue</label><input id="sales" type="number" min="0" value="100000"></div>
+<div><label for="income">Additional Income</label><input id="income" type="number" min="0" value="0"></div>
+<div><label for="goods">Cost of Goods Sold</label><input id="goods" type="number" min="0" value="35000"></div>
+<div><label for="salary">Salaries</label><input id="salary" type="number" min="0" value="15000"></div>
+<div><label for="rent">Rent</label><input id="rent" type="number" min="0" value="8000"></div>
+<div><label for="utilities">Utilities</label><input id="utilities" type="number" min="0" value="2000"></div>
+<div><label for="marketing">Marketing</label><input id="marketing" type="number" min="0" value="3000"></div>
+<div><label for="transport">Transport</label><input id="transport" type="number" min="0" value="2500"></div>
+<div><label for="other">Other Expenses</label><input id="other" type="number" min="0" value="1500"></div>
+<div><label for="tax">Taxes</label><input id="tax" type="number" min="0" value="0"></div>
+</div>
+<button class="dark" onclick="update()">Calculate</button>
+<button class="light" onclick="resetForm()">Reset</button>
+<button class="light" onclick="report()">Download CSV</button>
+<button class="light" onclick="print()">Print</button>
+</section>
+
+<section class="card">
+<h2>Financial Dashboard</h2>
+<div class="metrics">
+<div class="metric"><small>Total Revenue</small><div class="value" id="rev"></div></div>
+<div class="metric"><small>Total Expenses</small><div class="value" id="exp"></div></div>
+<div class="metric feature"><small>Net Profit</small><div class="value" id="profit"></div></div>
+<div class="metric"><small>Gross Profit</small><div class="value" id="gross"></div></div>
+<div class="metric"><small>Operating Profit</small><div class="value" id="op"></div></div>
+<div class="metric"><small>Profit Margin</small><div class="value" id="margin"></div></div>
+</div>
+<div class="status" id="status"></div>
+Revenue <b id="rl"></b><div class="bar"><div class="fill" id="rb"></div></div>
+Expenses <b id="el"></b><div class="bar"><div class="fill exp" id="eb"></div></div>
+</section>
+
+<div class="grid">
+<section class="card" id="price"><h2>Selling Price Calculator</h2>
+<label for="cost">Product Cost</label><input id="cost" type="number" min="0" value="500">
+<label for="marginTarget">Target Profit Margin (%)</label><input id="marginTarget" type="number" min="0" max="99.99" value="30">
+<button class="dark" onclick="priceCalc()">Calculate Price</button>
+<div class="result">Selling Price<strong id="priceResult"></strong></div>
+<div class="result">Profit Per Product<strong id="unitProfit"></strong></div>
+</section>
+<section class="card" id="break"><h2>Break-even Calculator</h2>
+<label for="fixed">Fixed Costs</label><input id="fixed" type="number" min="0" value="25000">
+<label for="unitPrice">Selling Price per Unit</label><input id="unitPrice" type="number" min="0" value="1000">
+<label for="variable">Variable Cost per Unit</label><input id="variable" type="number" min="0" value="400">
+<button class="dark" onclick="breakCalc()">Calculate</button>
+<div class="result">Units Needed<strong id="units"></strong></div>
+<div class="result">Break-even Revenue<strong id="beRevenue"></strong></div>
+</section>
+</div>
+
+<section class="card"><h2>How It Works</h2>
+<p>Net profit = Total revenue − Total expenses.</p>
+<p>Profit margin = Net profit ÷ Total revenue × 100.</p>
+<p>Break-even units = Fixed costs ÷ (Selling price − Variable cost per unit), rounded up.</p>
+<small>Currency selection changes display formatting only. It does not convert exchange rates. Results are estimates, not professional tax advice.</small>
+</section>
+</main>
+<footer>ProfitPilot | Know Your Numbers. Grow Your Profit.<br>© <span id="year"></span></footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const inputs=['sales','income','goods','salary','rent','utilities','marketing','transport','other','tax'];
+const defaults={sales:100000,income:0,goods:35000,salary:15000,rent:8000,utilities:2000,marketing:3000,transport:2500,other:1500,tax:0,cost:500,marginTarget:30,fixed:25000,unitPrice:1000,variable:400};
+const n=id=>Math.max(0,Number($(id).value)||0);
+const money=v=>{try{return new Intl.NumberFormat('en',{style:'currency',currency:$('cur').value,maximumFractionDigits:2}).format(v)}catch(e){return $('cur').value+' '+v.toFixed(2)}};
+function update(){
+let sales=n('sales'),income=n('income'),goods=n('goods'),operating=n('salary')+n('rent')+n('utilities')+n('marketing')+n('transport')+n('other'),revenue=sales+income,expenses=goods+operating+n('tax'),gross=sales-goods,op=gross+income-operating,profit=revenue-expenses;
+[['rev',revenue],['exp',expenses],['profit',profit],['gross',gross],['op',op]].forEach(([id,v])=>$(id).textContent=money(v));
+$('margin').textContent=(revenue?profit/revenue*100:0).toFixed(2)+'%';
+$('status').textContent=profit>0?'Your business is profitable.':profit<0?'Your business is making a loss.':'Your business is at break-even.';
+$('status').className='status'+(profit<0?' loss':'');
+$('rl').textContent=money(revenue);$('el').textContent=money(expenses);
+let max=Math.max(revenue,expenses,1);
+$('rb').style.width=Math.max(0,revenue)/max*100+'%';$('eb').style.width=expenses/max*100+'%';
+priceCalc();breakCalc();
+}
+function priceCalc(){let c=n('cost'),m=n('marginTarget');if(m>=100){$('priceResult').textContent='Margin must be below 100%';$('unitProfit').textContent='—';return}let p=c/(1-m/100);$('priceResult').textContent=money(p);$('unitProfit').textContent=money(p-c)}
+function breakCalc(){let f=n('fixed'),p=n('unitPrice'),v=n('variable'),d=p-v;if(d<=0){$('units').textContent='Not achievable';$('beRevenue').textContent='Price must exceed variable cost';return}let u=Math.ceil(f/d);$('units').textContent=u+' units';$('beRevenue').textContent=money(u*p)}
+function resetForm(){Object.keys(defaults).forEach(id=>$(id).value=defaults[id]);$('cur').value='USD';update()}
+function report(){let rows=[['ProfitPilot Report'],['Currency',$('cur').value],['Sales',n('sales')],['Additional Income',n('income')],['Goods',n('goods')],['Salaries',n('salary')],['Rent',n('rent')],['Utilities',n('utilities')],['Marketing',n('marketing')],['Transport',n('transport')],['Other',n('other')],['Tax',n('tax')],['Total Revenue',$('rev').textContent],['Total Expenses',$('exp').textContent],['Net Profit',$('profit').textContent],['Gross Profit',$('gross').textContent],['Operating Profit',$('op').textContent],['Margin',$('margin').textContent]];let csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\r\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv'}));a.download='profitpilot.csv';a.click();URL.revokeObjectURL(a.href)}
+$('cur').addEventListener('change',update);
+[...inputs,'cost','marginTarget','fixed','unitPrice','variable'].forEach(id=>$(id).addEventListener('input',update));
+$('year').textContent=new Date().getFullYear();update();
+</script>
+</body>
+</html>
